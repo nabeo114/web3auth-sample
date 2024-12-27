@@ -20,7 +20,9 @@
     "@web3auth/base": "^9.5.1",
     "@web3auth/ethereum-provider": "^9.5.1",
     "@web3auth/modal": "^9.5.1",
+    "buffer": "^6.0.3",
     "dotenv": "^16.4.7",
+    "ethers": "^6.13.4",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
@@ -44,5 +46,5 @@
     "webpack-cli": "^5.1.4",
     "webpack-dev-server": "^5.1.0"
   },
-  "homepage": "https://nabeo114.github.io/recharts-sample"
+  "homepage": "https://nabeo114.github.io/web3auth-sample"
 }

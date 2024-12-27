@@ -21,6 +21,9 @@ module.exports = {
   },
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.jsx'],
+    fallback: {
+      buffer: require.resolve("buffer")
+    }
   },
   devtool: 'inline-source-map',
   cache: {
@@ -49,5 +52,8 @@ module.exports = {
     }),
     // DefinePluginで環境変数を渡す
     new webpack.DefinePlugin(envKeys),
+    new webpack.ProvidePlugin({
+      Buffer: ["buffer", "Buffer"]
+    })
   ],
 };
