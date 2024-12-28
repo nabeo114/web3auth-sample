@@ -193,8 +193,8 @@ const App: React.FC = () => {
             </Button>
           ) : (
             <>
-              {userInfo?.picture && (
-                <Avatar src={userInfo.picture} alt="User Avatar" sx={{ width: 80, height: 80, margin: "10px auto" }}/>
+              {userInfo?.profileImage && (
+                <Avatar src={userInfo.profileImage} alt="User Avatar" sx={{ width: 80, height: 80, margin: "10px auto" }}/>
               )}
               <Typography variant="h6" align="center" gutterBottom>Welcome, {userInfo?.name || "User"}</Typography>
               <Typography variant="body1" gutterBottom>Address: {address}</Typography>
