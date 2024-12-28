@@ -62,6 +62,7 @@ const App: React.FC = () => {
             }
           }
         });
+
         setWeb3Auth(web3auth);
         if (web3auth.connected) {
           setProvider(web3auth.provider);
@@ -76,6 +77,28 @@ const App: React.FC = () => {
 
     initWeb3Auth();
   }, []);
+
+  useEffect(() => {
+    if (web3auth) {
+      fetchUserInfo();
+    }
+    if (provider) {
+      fetchAccountDetails();
+    }
+  }, [web3auth, provider]);
+
+  const fetchUserInfo = async () => {
+        if (!web3auth) {
+          console.log("web3auth not initialized yet");
+          return;
+        }
+        try {
+          const user = await web3auth.getUserInfo();
+          setUserInfo(user);
+        } catch (error) {
+          console.error("Login failed:", error);
+        }
+      };
 
   const fetchAccountDetails = async () => {
     if (!provider) {
@@ -102,11 +125,8 @@ const App: React.FC = () => {
     try {
       const provider = await web3auth.connect();
       setProvider(provider);
-      const user = await web3auth.getUserInfo();
-      setUserInfo(user);
       setLoggedIn(true);
-      await fetchAccountDetails();
-    } catch (error: any) {
+    } catch (error) {
       console.error("Login failed:", error);
     }
   };
@@ -161,45 +181,27 @@ const App: React.FC = () => {
   }
 
   return (
-    <Box display="flex" justifyContent="center" alignItems="center" flexDirection="column" minHeight="100vh" bgcolor="#f5f5f5" padding={2}>
+    <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh" bgcolor="#f5f5f5" padding={2}>
       <Card sx={{ maxWidth: 400, width: "100%", padding: 3 }}>
         <CardContent>
-          <Typography variant="h5" component="div" gutterBottom align="center">
+          <Typography variant="h5" align="center" gutterBottom>
             Web3Auth Demo
           </Typography>
           {!loggedIn ? (
-            <Box textAlign="center">
-              <Button variant="contained" color="primary" size="large" onClick={handleLogin} fullWidth sx={{ marginTop: 2 }}>
-                Login with Web3Auth
-              </Button>
-            </Box>
+            <Button variant="contained" color="primary" onClick={handleLogin} fullWidth>
+              Login with Web3Auth
+            </Button>
           ) : (
             <>
-            <Box textAlign="center">
               {userInfo?.picture && (
                 <Avatar src={userInfo.picture} alt="User Avatar" sx={{ width: 80, height: 80, margin: "10px auto" }}/>
               )}
-              <Typography variant="h6" gutterBottom>Welcome, {userInfo?.name || "User"}</Typography>
+              <Typography variant="h6" align="center" gutterBottom>Welcome, {userInfo?.name || "User"}</Typography>
               <Typography variant="body1" gutterBottom>Address: {address}</Typography>
               <Typography variant="body1" gutterBottom>Balance: {balance} ETH</Typography>
-              <Box
-                sx={{
-                  backgroundColor: "#f0f0f0",
-                  padding: 2,
-                  borderRadius: 1,
-                  marginBottom: 2,
-                  textAlign: "left",
-                  overflowWrap: "break-word",
-                }}
-              >
-                <Typography variant="body2">
-                  {JSON.stringify(userInfo, null, 2)}
-                </Typography>
-              </Box>
-              <Button variant="contained" color="secondary" size="large" onClick={handleLogout} fullWidth sx={{ marginTop: 2 }}>
+              <Button variant="contained" color="secondary" onClick={handleLogout} fullWidth sx={{ marginTop: 2 }}>
                 Logout
               </Button>
-            </Box>
             </>
           )}
         </CardContent>
