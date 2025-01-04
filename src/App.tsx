@@ -7,8 +7,38 @@ import { ethers } from "ethers";
 import { Box, Button, Card, CardContent, CircularProgress, Typography, Avatar, } from '@mui/material';
 import config from '../config';
 
+// Web3Auth設定
+const { clientId, infuraApiKey } = config.web3auth;
+
+const web3auth = new Web3Auth({
+  clientId,
+  privateKeyProvider: new EthereumPrivateKeyProvider({
+    config: {
+      chainConfig: {
+        chainNamespace: CHAIN_NAMESPACES.EIP155,
+        chainId: "0x89", // hex of 137, polygon mainnet
+        rpcTarget: "https://rpc.ankr.com/polygon",
+//        chainId: "0x534e5f41", // Amoy Testnet
+//        rpcTarget: "https://rpc-amoy.polygon.technology",
+//        rpcTarget: `https://polygon-amoy.infura.io/v3/${infuraApiKey}`,
+      }
+    }
+  }),
+  uiConfig: {
+    appName: "Web3Auth Demo",
+    mode: "light", // "light", "dark", "auto"
+    logoLight: "https://web3auth.io/images/web3authlog.png",
+    logoDark: "https://web3auth.io/images/web3authlogodark.png",
+    defaultLanguage: "ja", // en, de, ja, ko, zh, es, fr, pt, nl
+    loginGridCol: 3, // 2 | 3
+    primaryButton: "externalLogin", // "externalLogin" | "socialLogin" | "emailLogin"
+//            loginMethodsOrder: ["apple", "google", "line", "twitter", "facebook", "github", "discord", "email_passwordless" ],
+    uxMode: UX_MODE.REDIRECT,
+  },
+  web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_DEVNET,
+});
+
 const App: React.FC = () => {
-  const [web3auth, setWeb3Auth] = useState<Web3Auth | null>(null);
   const [provider, setProvider] = useState<IProvider | null>(null);
   const [userInfo, setUserInfo] = useState<any>(null);
   const [address, setAddress] = useState<string>("");
@@ -16,39 +46,9 @@ const App: React.FC = () => {
   const [loggedIn, setLoggedIn] = useState(false);
   const [loading, setLoading] = useState<boolean>(true);
 
-  // Web3Auth設定
-  const { clientId, infuraApiKey } = config.web3auth;
-
   useEffect(() => {
     const initWeb3Auth = async () => {
       try {
-        const web3auth = new Web3Auth({
-          clientId,
-          privateKeyProvider: new EthereumPrivateKeyProvider({
-            config: {
-              chainConfig: {
-                chainNamespace: CHAIN_NAMESPACES.EIP155,
-                chainId: "0x89", // hex of 137, polygon mainnet
-                rpcTarget: "https://rpc.ankr.com/polygon",
-//                chainId: "0x534e5f41", // Amoy Testnet
-//                rpcTarget: `https://polygon-amoy.infura.io/v3/${infuraApiKey}`,
-              }
-            }
-          }),
-          uiConfig: {
-            appName: "Web3Auth Demo",
-            mode: "light", // "light", "dark", "auto"
-            logoLight: "https://web3auth.io/images/web3authlog.png",
-            logoDark: "https://web3auth.io/images/web3authlogodark.png",
-            defaultLanguage: "ja", // en, de, ja, ko, zh, es, fr, pt, nl
-            loginGridCol: 3, // 2 | 3
-            primaryButton: "externalLogin", // "externalLogin" | "socialLogin" | "emailLogin"
-//            loginMethodsOrder: ["apple", "google", "line", "twitter", "facebook", "github", "discord", "email_passwordless" ],
-            uxMode: UX_MODE.REDIRECT,
-          },
-          web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_DEVNET,
-        });
-
         await web3auth.initModal({
           modalConfig: {
             [WALLET_ADAPTERS.AUTH]: {
@@ -63,7 +63,6 @@ const App: React.FC = () => {
           }
         });
 
-        setWeb3Auth(web3auth);
         if (web3auth.connected) {
           setProvider(web3auth.provider);
           setLoggedIn(true);
@@ -182,7 +181,7 @@ const App: React.FC = () => {
 
   return (
     <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh" bgcolor="#f5f5f5" padding={2}>
-      <Card sx={{ maxWidth: 400, width: "100%", padding: 3 }}>
+      <Card sx={{ maxWidth: 500, width: "100%", padding: 3 }}>
         <CardContent>
           <Typography variant="h5" align="center" gutterBottom>
             Web3Auth Demo
