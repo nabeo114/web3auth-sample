@@ -1,11 +1,11 @@
 /* eslint-disable no-console */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import { CHAIN_NAMESPACES, IProvider, UX_MODE, WEB3AUTH_NETWORK, WALLET_ADAPTERS } from "@web3auth/base";
 import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
 import { Web3Auth } from "@web3auth/modal";
 import { ethers } from "ethers";
-import { Box, Button, Card, CardContent, CircularProgress, Typography, Avatar, } from '@mui/material';
-import config from '../config';
+import { Box, Button, Card, CardContent, CircularProgress, Typography, Avatar, } from "@mui/material";
+import config from "../config";
 
 // Web3Auth設定
 const { clientId, infuraApiKey } = config.web3auth;
@@ -139,8 +139,8 @@ const App: React.FC = () => {
       await web3auth.logout();
       setProvider(null);
       setUserInfo(null);
-      setAddress('');
-      setBalance('');
+      setAddress("");
+      setBalance("");
       setLoggedIn(false);
     } catch (error) {
       console.error("Logout failed:", error);
